@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Board - Análise de Redes Sociais</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎨 Mood Board</h1>
+                <p>Análise Visual de Referências para Redes Sociais</p>
+            </div>
+        </header>
+
+        <!-- Config Section -->
+        <section class="config-section">
+            <div class="config-card">
+                <h2>⚙️ Configuração Notion</h2>
+                <div class="config-form">
+                    <div class="form-group">
+                        <label for="notionToken">Notion API Token:</label>
+                        <input
+                            type="password"
+                            id="notionToken"
+                            placeholder="secret_xxxxxxxxxxxxx"
+                            value="sk-proj-xxxxxxx"
+                        >
+                        <small>Gere em notion.so/my-integrations</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="databaseId">Database ID:</label>
+                        <input
+                            type="text"
+                            id="databaseId"
+                            placeholder="xxxx-xxxx-xxxx-xxxx"
+                            value="bd47f0c8c77d45a98c07d2b5f6a8b9c0"
+                        >
+                        <small>Copie da URL: notion.so/[ID]?v=...</small>
+                    </div>
+                    <button id="testConnection" class="btn-secondary">🧪 Testar Conexão</button>
+                    <span id="connectionStatus" class="status-indicator"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add URL Section -->
+        <section class="add-section">
+            <div class="add-card">
+                <h2>➕ Adicionar ao Mood Board</h2>
+                <div class="add-form">
+                    <div class="url-input-group">
+                        <input
+                            type="url"
+                            id="urlInput"
+                            placeholder="Cole URL (Instagram, TikTok, Blog, YouTube...)"
+                            value="https://www.instagram.com/p/sample/"
+                        >
+                        <button id="addBtn" class="btn-primary">Adicionar</button>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="socialSelect">Rede Social:</label>
+                            <select id="socialSelect">
+                                <option value="">Detectar automaticamente</option>
+                                <option value="Instagram">Instagram Post</option>
+                                <option value="Reels">Instagram Reels</option>
+                                <option value="Carrossel">Instagram Carrossel</option>
+                                <option value="TikTok">TikTok</option>
+                                <option value="YouTube">YouTube</option>
+                                <option value="Blog">Blog</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectSelect">Projeto/Cliente:</label>
+                            <select id="projectSelect">
+                                <option value="">Selecione um projeto</option>
+                                <option value="Cliente A">Cliente A</option>
+                                <option value="Cliente B">Cliente B</option>
+                                <option value="Projeto Pessoal">Projeto Pessoal</option>
+                                <option value="Tendências">Tendências</option>
+                                <option value="Competidores">Competidores</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notesInput">Notas (Gancho, CTA, Insight):</label>
+                            <textarea
+                                id="notesInput"
+                                placeholder="Ex: Gancho de 3s, CTA com urgência, design minimalista..."
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="filters">
+                <h3>🔍 Filtrar</h3>
+                <select id="projectFilter">
+                    <option value="">Todos os Projetos</option>
+                    <option value="Cliente A">Cliente A</option>
+                    <option value="Cliente B">Cliente B</option>
+                    <option value="Projeto Pessoal">Projeto Pessoal</option>
+                    <option value="Tendências">Tendências</option>
+                    <option value="Competidores">Competidores</option>
+                </select>
+
+                <button id="refreshBtn" class="btn-secondary">🔄 Atualizar</button>
+                <button id="clearAllBtn" class="btn-danger-small">🗑️ Limpar Tudo</button>
+            </div>
+            <div id="loadingIndicator" class="loading-spinner hidden"></div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats-section">
+            <div class="stat-item">
+                <span class="stat-number" id="totalCount">0</span>
+                <span class="stat-label">Itens Total</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="filteredCount">0</span>
+                <span class="stat-label">Visíveis</span>
+            </div>
+        </section>
+
+        <!-- Grid -->
+        <section class="grid-section">
+            <div id="moodGrid" class="mood-grid"></div>
+            <div id="emptyState" class="empty-state">
+                <p>📭 Nenhuma referência ainda. Cole uma URL acima!</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de Edição de Notas -->
+    <div id="notesModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Notas</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="modalNotesInput" placeholder="Suas notas..."></textarea>
+                <div class="modal-meta">
+                    <p><strong>URL:</strong> <span id="modalUrl"></span></p>
+                    <p><strong>Adicionado em:</strong> <span id="modalDate"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveNotesBtn" class="btn-primary">Salvar Notas</button>
+                <button id="deleteItemBtn" class="btn-danger">Deletar</button>
+                <button id="closeModalBtn" class="btn-secondary">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
