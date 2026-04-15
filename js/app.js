@@ -40,6 +40,13 @@ const elements = {
 
 // ============= NOTION API =============
 
+// CORS Proxy para contornar bloqueio do navegador
+const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+
+function notionUrl(endpoint) {
+    return CORS_PROXY + `https://api.notion.com/v1${endpoint}`;
+}
+
 async function testNotionConnection() {
     const token = elements.notionToken.value;
     const dbId = elements.databaseId.value;
@@ -52,7 +59,7 @@ async function testNotionConnection() {
     showLoading(true);
     try {
         const response = await fetch(
-            `https://api.notion.com/v1/databases/${dbId.replace(/-/g, '')}`,
+            notionUrl(`/databases/${dbId.replace(/-/g, '')}`),
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -110,7 +117,7 @@ async function loadItems() {
     try {
         const dbId = appState.databaseId.replace(/-/g, '');
         const response = await fetch(
-            `https://api.notion.com/v1/databases/${dbId}/query`,
+            notionUrl(`/databases/${dbId}/query`),
             {
                 method: 'POST',
                 headers: {
@@ -165,7 +172,7 @@ async function addItemToNotion(url, thumbnail, social, project, notes) {
     showLoading(true);
     try {
         const dbId = appState.databaseId.replace(/-/g, '');
-        const response = await fetch('https://api.notion.com/v1/pages', {
+        const response = await fetch(notionUrl('/pages'), {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${appState.notionToken}`,
@@ -243,7 +250,7 @@ async function updateItemInNotion(pageId, notes) {
 
     try {
         const response = await fetch(
-            `https://api.notion.com/v1/pages/${pageId.replace(/-/g, '')}`,
+            notionUrl(`/pages/${pageId.replace(/-/g, '')}`),
             {
                 method: 'PATCH',
                 headers: {
@@ -286,7 +293,7 @@ async function deleteItemFromNotion(pageId) {
     showLoading(true);
     try {
         const response = await fetch(
-            `https://api.notion.com/v1/pages/${pageId.replace(/-/g, '')}`,
+            notionUrl(`/pages/${pageId.replace(/-/g, '')}`),
             {
                 method: 'PATCH',
                 headers: {
