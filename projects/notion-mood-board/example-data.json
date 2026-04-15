@@ -1,0 +1,185 @@
+{
+  "description": "Exemplo de dados de mood board com 5 referências fictícias",
+  "totalItems": 5,
+  "items": [
+    {
+      "id": "a1b2c3d4e5f6",
+      "url": "https://www.instagram.com/p/CqX8hzVJK9E/",
+      "thumbnail": "https://scontent.cdninstagram.com/v/t51.2885-15/309654321_123456789_987654321_n.jpg",
+      "social": "Instagram",
+      "project": "Cliente A - Loja Online",
+      "notes": "Gancho visual: cores vibrantes com contraste alto (rosa + azul). Hook de 2s com CTA claro 'Saiba mais'. Composição: produto em destaque + lifestyle.",
+      "dateSaved": "2024-04-14T10:30:00Z",
+      "analysis": {
+        "hook": "Cores contrastantes",
+        "cta": "Clique direto no link da bio",
+        "timing": "2-3 segundos para engajamento",
+        "format": "Carrossel 3 imagens"
+      }
+    },
+    {
+      "id": "b2c3d4e5f6g7",
+      "url": "https://www.tiktok.com/@brandname/video/7238012345678901234",
+      "thumbnail": "https://p16-sign.tiktokcdn.com/tos-useast2a-p-0-cdn/cover/123456789.jpeg",
+      "social": "TikTok",
+      "project": "Tendências - Viral Content",
+      "notes": "Formato vertical (9:16), 20s. Técnica: trending sound + transição rápida no meio. Hook nos primeiros 3s com emoji e texto na tela. Ending com CTA para seguir.",
+      "dateSaved": "2024-04-13T15:45:00Z",
+      "analysis": {
+        "hook": "Transição rápida + emoji animado",
+        "cta": "Segue para mais",
+        "timing": "20 segundos",
+        "music": "Trending sound (88.5% engagement)"
+      }
+    },
+    {
+      "id": "c3d4e5f6g7h8",
+      "url": "https://www.instagram.com/reel/CqX8hzVJK9E/",
+      "thumbnail": "https://scontent.cdninstagram.com/v/t51.2885-15/309654321_123456789_987654321_reels.jpg",
+      "social": "Reels",
+      "project": "Cliente B - Agência",
+      "notes": "Formato 9:16, 30s. Hook educacional: 'Aprenda em 30s'. Padrão: 0-3s hook, 4-25s conteúdo, 26-30s CTA. Transições suaves, tipografia clara. Thumbnail com face + texto.",
+      "dateSaved": "2024-04-12T09:15:00Z",
+      "analysis": {
+        "hook": "Promessa educacional",
+        "cta": "Salve este reel",
+        "timing": "Quebra em 3 momentos",
+        "format": "Educacional + Inspiracional"
+      }
+    },
+    {
+      "id": "d4e5f6g7h8i9",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "thumbnail": "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+      "social": "YouTube",
+      "project": "Competidores - Análise",
+      "notes": "Thumbnail: face com expressão forte + texto 'NUNCA MAIS...' em vermelho. Padrão de vídeos que viralizam. Duração: 8:32 min. Roteiro: hook (0-10s) + desenvolvimento + CTA (final).",
+      "dateSaved": "2024-04-11T14:22:00Z",
+      "analysis": {
+        "hook": "Face + texto chamativo",
+        "cta": "Inscrever-se",
+        "color": "Vermelho + Preto",
+        "text": "ALL CAPS com urgência"
+      }
+    },
+    {
+      "id": "e5f6g7h8i9j0",
+      "url": "https://www.exemplo.com/blog/como-criar-viral",
+      "thumbnail": "https://www.exemplo.com/images/blog-thumb-viral.jpg",
+      "social": "Blog",
+      "project": "Projeto Pessoal - Case Study",
+      "notes": "Design minimalista com muito espaço em branco. Tipografia: Heading em sans-serif bold, corpo em serif. Imagens grandes (full-width). Padrão: intro 100 palavras, breakpoints a cada 300 palavras.",
+      "dateSaved": "2024-04-10T11:05:00Z",
+      "analysis": {
+        "design": "Clean + Espaço em branco",
+        "typography": "Contrast bem definido",
+        "imagery": "Uma grande imagem por seção",
+        "cta": "Download gratuito no final"
+      }
+    }
+  ],
+  "projects": [
+    "Cliente A - Loja Online",
+    "Cliente B - Agência",
+    "Tendências - Viral Content",
+    "Competidores - Análise",
+    "Projeto Pessoal - Case Study"
+  ],
+  "socialNetworks": [
+    "Instagram",
+    "Reels",
+    "Carrossel",
+    "TikTok",
+    "YouTube",
+    "Blog"
+  ],
+  "notionDatabase": {
+    "name": "Mood Board - Análise Visual",
+    "description": "Database para coletar e organizar referências visuais de redes sociais",
+    "properties": {
+      "URL Origem": {
+        "type": "url",
+        "description": "Link do post/conteúdo original"
+      },
+      "Thumbnail": {
+        "type": "files",
+        "description": "Preview/imagem do conteúdo (auto-generated como cover)"
+      },
+      "Rede Social": {
+        "type": "select",
+        "options": [
+          "Instagram",
+          "Reels",
+          "Carrossel",
+          "TikTok",
+          "YouTube",
+          "Blog",
+          "Twitter",
+          "LinkedIn",
+          "Facebook",
+          "Pinterest",
+          "Outro"
+        ]
+      },
+      "Projeto/Cliente": {
+        "type": "select",
+        "options": [
+          "Cliente A",
+          "Cliente B",
+          "Projeto Pessoal",
+          "Tendências",
+          "Competidores"
+        ]
+      },
+      "Data Salva": {
+        "type": "created_time",
+        "description": "Timestamp automático"
+      },
+      "Notas": {
+        "type": "rich_text",
+        "description": "Anotações sobre gancho, CTA, insight visual, técnica de design"
+      }
+    }
+  },
+  "useCases": [
+    {
+      "role": "Social Media Manager",
+      "usage": "Coletar referências semanais de concorrentes para briefing de conteúdo"
+    },
+    {
+      "role": "Designer Gráfico",
+      "usage": "Organizar tendências de design por projeto para manter coerência visual"
+    },
+    {
+      "role": "Content Creator",
+      "usage": "Analisar ganchos e CTAs de criadores bem-sucedidos"
+    },
+    {
+      "role": "Agência",
+      "usage": "Compartilhar mood board com cliente para alinhamento criativo"
+    },
+    {
+      "role": "Copywriter",
+      "usage": "Estudar padrões de hooks e emoções que funcionam em cada rede"
+    }
+  ],
+  "tips": {
+    "organization": [
+      "Use 'Projeto/Cliente' para separar por campanha",
+      "Filtre por rede social para ver tendências por plataforma",
+      "Agrupe por data para acompanhar evolução de trends"
+    ],
+    "analysis": [
+      "Anote os primeiros 3 segundos (o hook é crítico)",
+      "Observe paleta de cores padrão em cada rede",
+      "Compare CTA entre formatos (post, reels, story)",
+      "Registre técnicas de transição e edição"
+    ],
+    "workflow": [
+      "Revise mood board 1x por semana",
+      "Exporte notas em documento de briefing",
+      "Teste técnicas aprendidas em seu próprio conteúdo",
+      "Compartilhe insights com equipe de criação"
+    ]
+  }
+}
