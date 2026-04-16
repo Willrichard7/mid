@@ -3,170 +3,1490 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Board - Análise de Redes Sociais</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>WR Brands - Post Approval Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0D1B5E;
+            --off-white: #F0EEE8;
+            --mid-gray: #D0CEC6;
+            --accent-blue: #2563EB;
+            --success: #22c55e;
+            --warning: #eab308;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--off-white);
+            color: #1f2937;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container {
+            flex: 1;
+            width: 100%;
+            max-width: 390px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--off-white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* ===== LOGIN SCREEN (A1) ===== */
+        #loginScreen {
+            background-color: var(--off-white);
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .wr-logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 1px solid var(--mid-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: white;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .btn-primary {
+            padding: 14px 16px;
+            background-color: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-primary:active {
+            opacity: 0.9;
+        }
+
+        .login-footer {
+            text-align: center;
+        }
+
+        .forgot-password {
+            display: block;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #999;
+            margin-top: 30px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background-color: white;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--mid-gray);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .header-logo {
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .header-back {
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-bottom: 1px solid var(--mid-gray);
+            overflow-x: auto;
+            flex-shrink: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: #999;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--navy);
+            border-bottom-color: var(--navy);
+        }
+
+        /* ===== FEED ===== */
+        .feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 12px 80px 12px;
+        }
+
+        .pending-counter {
+            background-color: #fef3c7;
+            border-left: 4px solid var(--warning);
+            padding: 12px 16px;
+            margin: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .post-card {
+            background-color: white;
+            border-radius: 14px;
+            border: 1px solid var(--mid-gray);
+            overflow: hidden;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .post-card:active {
+            opacity: 0.8;
+        }
+
+        .post-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+        }
+
+        .post-content {
+            padding: 12px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .client-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .client-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--navy);
+        }
+
+        .post-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+
+        .post-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-pending .status-dot { background-color: var(--warning); }
+        .status-approved .status-dot { background-color: var(--success); }
+        .status-in-review .status-dot { background-color: var(--info); }
+        .status-rejected .status-dot { background-color: var(--error); }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .network-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: var(--mid-gray);
+            border-radius: 4px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .post-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        /* ===== FAB ===== */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--navy);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 40;
+        }
+
+        .fab:active {
+            opacity: 0.9;
+        }
+
+        /* ===== FORM SCREEN (A3) ===== */
+        .form-screen {
+            background-color: var(--off-white);
+        }
+
+        .form-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--mid-gray);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: white;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--mid-gray);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fafaf8;
+        }
+
+        .upload-area.has-image {
+            border: none;
+            padding: 0;
+        }
+
+        .upload-preview {
+            width: 100%;
+            border-radius: 8px;
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .upload-text {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .client-comment-block {
+            background-color: #dbeafe;
+            border-left: 4px solid var(--accent-blue);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .comment-label {
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .comment-text {
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .form-button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .btn-secondary {
+            padding: 12px 16px;
+            background-color: white;
+            color: var(--navy);
+            border: 1px solid var(--navy);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary:active {
+            opacity: 0.8;
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .btn-text:active {
+            opacity: 0.8;
+        }
+
+        /* ===== DETAIL SCREEN (C2) ===== */
+        .detail-screen {
+            background-color: var(--off-white);
+        }
+
+        .detail-header {
+            background-color: white;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--mid-gray);
+            flex-shrink: 0;
+        }
+
+        .back-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .detail-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .detail-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .detail-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .detail-status-badge .status-dot {
+            width: 6px;
+            height: 6px;
+        }
+
+        .detail-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .detail-caption {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .detail-meta {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .adjustment-block {
+            background-color: #fef3c7;
+            border-left: 4px solid var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+
+        .adjustment-label {
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+
+        .adjustment-text {
+            color: #333;
+        }
+
+        .action-locked {
+            background-color: #e5e7eb;
+            border-left: 4px solid #6b7280;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .btn-icon {
+            flex: 0 0 auto;
+            padding: 12px 16px;
+            border: 1px solid var(--mid-gray);
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--error);
+        }
+
+        .btn-icon.approve {
+            color: var(--navy);
+            background-color: var(--navy);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-icon:active {
+            opacity: 0.8;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            background-color: white;
+            border: 1px solid var(--mid-gray);
+            border-radius: 8px;
+            color: #999;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .btn-full:active {
+            opacity: 0.8;
+        }
+
+        /* ===== BOTTOM SHEET ===== */
+        .bottom-sheet-overlay {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .bottom-sheet-overlay.active {
+            display: block;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 101;
+            animation: slideUp 0.3s ease-out;
+            max-width: 390px;
+            margin: 0 auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .sheet-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .sheet-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid var(--mid-gray);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: system-ui, -apple-system, sans-serif;
+            resize: vertical;
+            margin-bottom: 16px;
+        }
+
+        .sheet-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sheet-btn-primary {
+            padding: 12px;
+            background-color: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sheet-btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .sheet-btn-primary:active:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .sheet-btn-secondary {
+            padding: 12px;
+            background-color: white;
+            color: var(--navy);
+            border: 1px solid var(--navy);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sheet-btn-secondary:active {
+            opacity: 0.8;
+        }
+
+        /* ===== HISTORY SCREEN (C3) ===== */
+        .history-meta {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .rejection-reason {
+            background-color: #fee2e2;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #7f1d1d;
+            margin-top: 8px;
+        }
+
+        .history-link {
+            display: block;
+            text-align: center;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 16px;
+        }
+
+        /* ===== SWIPE HINT ===== */
+        .swipe-hint {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #999;
+            white-space: nowrap;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%); }
+            50% { transform: translateX(-48%); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-height: 600px) {
+            .screen { overflow-y: auto; }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-content">
-                <h1>🎨 Mood Board</h1>
-                <p>Análise Visual de Referências para Redes Sociais</p>
-            </div>
-        </header>
-
-        <!-- Config Section -->
-        <section class="config-section">
-            <div class="config-card">
-                <h2>⚙️ Configuração Notion</h2>
-                <div class="config-form">
-                    <div class="form-group">
-                        <label for="notionToken">Notion API Token:</label>
-                        <input
-                            type="password"
-                            id="notionToken"
-                            placeholder="secret_xxxxxxxxxxxxx"
-                            value="sk-proj-xxxxxxx"
-                        >
-                        <small>Gere em notion.so/my-integrations</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="databaseId">Database ID:</label>
-                        <input
-                            type="text"
-                            id="databaseId"
-                            placeholder="xxxx-xxxx-xxxx-xxxx"
-                            value="bd47f0c8c77d45a98c07d2b5f6a8b9c0"
-                        >
-                        <small>Copie da URL: notion.so/[ID]?v=...</small>
-                    </div>
-                    <button id="testConnection" class="btn-secondary">🧪 Testar Conexão</button>
-                    <span id="connectionStatus" class="status-indicator"></span>
+    <div class="app-container">
+        <!-- LOGIN SCREEN (A1) -->
+        <div id="loginScreen" class="screen">
+            <div class="login-container">
+                <div class="wr-logo">WR</div>
+                <form class="login-form" onsubmit="handleLogin(event)">
+                    <input type="email" class="form-input" placeholder="Email" required>
+                    <input type="password" class="form-input" placeholder="Senha" required>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                <div class="login-footer">
+                    <a href="#" class="forgot-password">Esqueci minha senha</a>
+                    <div class="copyright">todos os direitos reservados WR Brands</div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Add URL Section -->
-        <section class="add-section">
-            <div class="add-card">
-                <h2>➕ Adicionar ao Mood Board</h2>
-                <div class="add-form">
-                    <div class="url-input-group">
-                        <input
-                            type="url"
-                            id="urlInput"
-                            placeholder="Cole URL (Instagram, TikTok, Blog, YouTube...)"
-                            value="https://www.instagram.com/p/sample/"
-                        >
-                        <button id="addBtn" class="btn-primary">Adicionar</button>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="socialSelect">Rede Social:</label>
-                            <select id="socialSelect">
-                                <option value="">Detectar automaticamente</option>
-                                <option value="Instagram">Instagram Post</option>
-                                <option value="Reels">Instagram Reels</option>
-                                <option value="Carrossel">Instagram Carrossel</option>
-                                <option value="TikTok">TikTok</option>
-                                <option value="YouTube">YouTube</option>
-                                <option value="Blog">Blog</option>
-                                <option value="Outro">Outro</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="projectSelect">Projeto/Cliente:</label>
-                            <select id="projectSelect">
-                                <option value="">Selecione um projeto</option>
-                                <option value="Cliente A">Cliente A</option>
-                                <option value="Cliente B">Cliente B</option>
-                                <option value="Projeto Pessoal">Projeto Pessoal</option>
-                                <option value="Tendências">Tendências</option>
-                                <option value="Competidores">Competidores</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="notesInput">Notas (Gancho, CTA, Insight):</label>
-                            <textarea
-                                id="notesInput"
-                                placeholder="Ex: Gancho de 3s, CTA com urgência, design minimalista..."
-                                rows="3"
-                            ></textarea>
-                        </div>
-                    </div>
+        <!-- AGENCY FEED (A2) -->
+        <div id="agencyFeedScreen" class="screen">
+            <div class="header">
+                <div>
+                    <div class="header-logo">wr brands</div>
+                    <div class="header-title">Criador de posts: Carne&Osso</div>
                 </div>
             </div>
-        </section>
-
-        <!-- Filters Section -->
-        <section class="filters-section">
-            <div class="filters">
-                <h3>🔍 Filtrar</h3>
-                <select id="projectFilter">
-                    <option value="">Todos os Projetos</option>
-                    <option value="Cliente A">Cliente A</option>
-                    <option value="Cliente B">Cliente B</option>
-                    <option value="Projeto Pessoal">Projeto Pessoal</option>
-                    <option value="Tendências">Tendências</option>
-                    <option value="Competidores">Competidores</option>
-                </select>
-
-                <button id="refreshBtn" class="btn-secondary">🔄 Atualizar</button>
-                <button id="clearAllBtn" class="btn-danger-small">🗑️ Limpar Tudo</button>
+            <div class="tabs">
+                <button class="tab active" data-week="current" onclick="changeWeek(this)">Semana atual</button>
+                <button class="tab" data-week="next" onclick="changeWeek(this)">Próxima semana</button>
+                <button class="tab" data-week="prev" onclick="changeWeek(this)">Semana anterior</button>
             </div>
-            <div id="loadingIndicator" class="loading-spinner hidden"></div>
-        </section>
+            <div class="feed-content" id="agencyFeedContent">
+                <!-- Posts will be rendered here -->
+            </div>
+            <button class="fab" onclick="goToNewPost()">+ Novo post</button>
+        </div>
 
-        <!-- Stats -->
-        <section class="stats-section">
-            <div class="stat-item">
-                <span class="stat-number" id="totalCount">0</span>
-                <span class="stat-label">Itens Total</span>
+        <!-- NEW/EDIT POST (A3) -->
+        <div id="postFormScreen" class="screen form-screen">
+            <div class="header">
+                <button class="header-back" onclick="goBack()">← voltar</button>
+                <div class="header-title">Novo Post</div>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" id="filteredCount">0</span>
-                <span class="stat-label">Visíveis</span>
-            </div>
-        </section>
+            <div class="form-content">
+                <div class="form-group">
+                    <label class="form-label">Título do Post</label>
+                    <input type="text" class="form-input" id="postTitle" placeholder="">
+                </div>
 
-        <!-- Grid -->
-        <section class="grid-section">
-            <div id="moodGrid" class="mood-grid"></div>
-            <div id="emptyState" class="empty-state">
-                <p>📭 Nenhuma referência ainda. Cole uma URL acima!</p>
-            </div>
-        </section>
-    </div>
+                <div class="form-group">
+                    <label class="form-label">Imagem / Vídeo</label>
+                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('imageInput').click()">
+                        <div class="upload-text">Toque para fazer upload</div>
+                    </div>
+                    <input type="file" id="imageInput" style="display: none;" accept="image/*,video/*" onchange="handleImageUpload(event)">
+                </div>
 
-    <!-- Modal de Edição de Notas -->
-    <div id="notesModal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Editar Notas</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <textarea id="modalNotesInput" placeholder="Suas notas..."></textarea>
-                <div class="modal-meta">
-                    <p><strong>URL:</strong> <span id="modalUrl"></span></p>
-                    <p><strong>Adicionado em:</strong> <span id="modalDate"></span></p>
+                <div class="form-group">
+                    <label class="form-label">Legenda</label>
+                    <textarea class="form-textarea" id="postCaption" placeholder=""></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rede Social</label>
+                    <select class="form-select" id="postNetwork">
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="tiktok">TikTok</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Data de publicação</label>
+                    <input type="date" class="form-input" id="postDate">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observação</label>
+                    <input type="text" class="form-input" id="postNote" placeholder="Visível apenas para WR Brands">
+                </div>
+
+                <div id="clientCommentBlock" style="display: none;"></div>
+
+                <div class="form-button-group">
+                    <button class="btn-secondary" onclick="savePostDraft()">Salvar rascunho</button>
+                    <button class="btn-text" id="deletePostBtn" style="display: none;" onclick="deletePost()">Excluir post</button>
+                    <button class="btn-primary" onclick="submitPostForApproval()">Enviar para aprovação →</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="saveNotesBtn" class="btn-primary">Salvar Notas</button>
-                <button id="deleteItemBtn" class="btn-danger">Deletar</button>
-                <button id="closeModalBtn" class="btn-secondary">Fechar</button>
+        </div>
+
+        <!-- CLIENT FEED (C1) -->
+        <div id="clientFeedScreen" class="screen">
+            <div class="header">
+                <div>
+                    <div class="header-subtitle">Aprovador de posts:</div>
+                    <div class="header-title">Carne&Osso</div>
+                </div>
+            </div>
+            <div class="tabs">
+                <button class="tab active" data-week="current" onclick="changeWeek(this)">Semana atual</button>
+                <button class="tab" data-week="next" onclick="changeWeek(this)">Próxima semana</button>
+                <button class="tab" data-week="prev" onclick="changeWeek(this)">Semana anterior</button>
+            </div>
+            <div class="feed-content" id="clientFeedContent">
+                <!-- Posts will be rendered here -->
+            </div>
+            <a href="#" class="history-link" onclick="goToHistory(event)">Ver histórico</a>
+        </div>
+
+        <!-- POST DETAIL & APPROVAL (C2) -->
+        <div id="postDetailScreen" class="screen detail-screen">
+            <div class="detail-header">
+                <a href="#" class="back-link" onclick="goBack(event)">← voltar para o feed</a>
+            </div>
+            <div class="detail-content" id="detailContent">
+                <!-- Detail will be rendered here -->
+            </div>
+        </div>
+
+        <!-- HISTORY (C3) -->
+        <div id="historyScreen" class="screen">
+            <div class="header">
+                <div>
+                    <div class="header-subtitle">Aprovador de posts:</div>
+                    <div class="header-title">Carne&Osso</div>
+                </div>
+            </div>
+            <div class="tabs">
+                <button class="tab active" data-status="all" onclick="changeHistoryFilter(this)">Todos</button>
+                <button class="tab" data-status="approved" onclick="changeHistoryFilter(this)">Aprovados</button>
+                <button class="tab" data-status="rejected" onclick="changeHistoryFilter(this)">Reprovados</button>
+            </div>
+            <div class="feed-content" id="historyContent">
+                <!-- History posts will be rendered here -->
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast hidden"></div>
+    <!-- BOTTOM SHEETS -->
+    <div id="bottomSheetOverlay" class="bottom-sheet-overlay" onclick="closeBottomSheet()"></div>
 
-    <script src="js/app.js"></script>
+    <div id="approveSheet" class="bottom-sheet" style="display: none;">
+        <div class="sheet-title">Confirmar aprovação</div>
+        <div class="sheet-buttons">
+            <button class="sheet-btn-primary" onclick="confirmApprove()">Confirmar aprovação</button>
+            <button class="sheet-btn-secondary" onclick="closeBottomSheet()">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="rejectSheet" class="bottom-sheet" style="display: none;">
+        <div class="sheet-title">Motivo da reprovação</div>
+        <textarea class="sheet-textarea" id="rejectReason" placeholder="Explique o motivo para a agência ajustar..."></textarea>
+        <div class="sheet-buttons">
+            <button class="sheet-btn-primary" id="rejectBtn" disabled onclick="confirmReject()">Confirmar reprovação</button>
+            <button class="sheet-btn-secondary" onclick="closeBottomSheet()">Cancelar</button>
+        </div>
+    </div>
+
+    <div id="adjustSheet" class="bottom-sheet" style="display: none;">
+        <div class="sheet-title">O que precisa ajustar?</div>
+        <textarea class="sheet-textarea" id="adjustText" placeholder="Descreva o que você quer diferente..."></textarea>
+        <div class="sheet-buttons">
+            <button class="sheet-btn-primary" id="adjustBtn" disabled onclick="confirmAdjust()">Enviar pedido de ajuste</button>
+            <button class="sheet-btn-secondary" onclick="closeBottomSheet()">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        // === STATE ===
+        let currentScreen = 'loginScreen';
+        let currentRole = null;
+        let currentPost = null;
+        let currentWeek = 'current';
+        let currentHistoryFilter = 'all';
+        let swipeStartX = 0;
+        let swipeStartY = 0;
+        let shakeHintShown = false;
+
+        // === MOCK DATA ===
+        const mockPosts = [
+            {
+                id: 1,
+                title: 'Post 1',
+                caption: 'This is a beautiful post about meat and bones. Come and join us!',
+                image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="360" height="202"%3E%3Crect fill="%232563EB" width="360" height="202"/%3E%3Ctext x="50%25" y="50%25" font-family="system-ui" font-size="24" fill="white" text-anchor="middle" dy="0.3em"%3EPost 1%3C/text%3E%3C/svg%3E',
+                network: 'Instagram',
+                scheduled_date: getDateForWeek('next', 0),
+                status: 'pending',
+                internal_note: 'Internal note here',
+                client_comment: null,
+                action_date: null,
+                client_id: 'carne-osso',
+                rejection_reason: null
+            },
+            {
+                id: 2,
+                title: 'Post 2',
+                caption: 'Amazing offer this week. Limited time only!',
+                image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="360" height="202"%3E%3Crect fill="%2322c55e" width="360" height="202"/%3E%3Ctext x="50%25" y="50%25" font-family="system-ui" font-size="24" fill="white" text-anchor="middle" dy="0.3em"%3EPost 2%3C/text%3E%3C/svg%3E',
+                network: 'Facebook',
+                scheduled_date: getDateForWeek('prev', 4),
+                status: 'approved',
+                internal_note: null,
+                client_comment: null,
+                action_date: new Date(Date.now() - 3*24*60*60*1000).toISOString(),
+                client_id: 'carne-osso',
+                rejection_reason: null
+            },
+            {
+                id: 3,
+                title: 'Post 3',
+                caption: 'New summer collection is here!',
+                image_url: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="360" height="202"%3E%3Crect fill="%23eab308" width="360" height="202"/%3E%3Ctext x="50%25" y="50%25" font-family="system-ui" font-size="24" fill="white" text-anchor="middle" dy="0.3em"%3EPost 3%3C/text%3E%3C/svg%3E',
+                network: 'Instagram',
+                scheduled_date: getDateForWeek('current', 2),
+                status: 'in_review',
+                internal_note: null,
+                client_comment: 'Trocar a foto por uma com mais movimento',
+                action_date: new Date(Date.now() - 1*24*60*60*1000).toISOString(),
+                client_id: 'carne-osso',
+                rejection_reason: null
+            }
+        ];
+
+        // === HELPERS ===
+        function getDateForWeek(week, dayOffset) {
+            const today = new Date();
+            const monday = new Date(today);
+            monday.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+
+            if (week === 'next') {
+                monday.setDate(monday.getDate() + 7);
+            } else if (week === 'prev') {
+                monday.setDate(monday.getDate() - 7);
+            }
+
+            monday.setDate(monday.getDate() + dayOffset);
+            return monday.toISOString().split('T')[0];
+        }
+
+        function isDateInWeek(dateStr, week) {
+            const date = new Date(dateStr);
+            const checkDate = new Date(getDateForWeek(week, 0));
+            const weekStart = new Date(checkDate);
+            const weekEnd = new Date(checkDate);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+
+            return date >= weekStart && date < weekEnd;
+        }
+
+        function goToScreen(screen) {
+            document.getElementById(currentScreen).classList.remove('active');
+            currentScreen = screen;
+            document.getElementById(screen).classList.add('active');
+        }
+
+        function goBack(e) {
+            if (e) e.preventDefault();
+            if (currentRole === 'agency') {
+                goToScreen('agencyFeedScreen');
+            } else {
+                goToScreen('clientFeedScreen');
+            }
+        }
+
+        // === AUTHENTICATION ===
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            if (email.includes('agency') || email.includes('wr')) {
+                currentRole = 'agency';
+                goToScreen('agencyFeedScreen');
+            } else {
+                currentRole = 'client';
+                goToScreen('clientFeedScreen');
+            }
+            renderFeed();
+        }
+
+        // === AGENCY FEED (A2) ===
+        function renderAgencyFeed() {
+            const feed = document.getElementById('agencyFeedContent');
+            const filtered = mockPosts.filter(p => isDateInWeek(p.scheduled_date, currentWeek));
+
+            if (filtered.length === 0) {
+                feed.innerHTML = '<div class="empty-state">Nenhum post essa semana ainda.</div>';
+                return;
+            }
+
+            feed.innerHTML = filtered.map(post => `
+                <div class="post-card" onclick="goToEditPost(${post.id})">
+                    <img src="${post.image_url}" class="post-image" alt="">
+                    <div class="post-content">
+                        <div class="post-header">
+                            <div class="client-avatar">CO</div>
+                            <div class="client-name">Carne&Osso</div>
+                        </div>
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-status status-${post.status}">
+                            <div class="status-dot"></div>
+                            <span>${getStatusLabel(post.status)}</span>
+                        </div>
+                        <div class="post-meta">
+                            <span>${post.network}</span>
+                            <span>•</span>
+                            <span>${post.scheduled_date}</span>
+                        </div>
+                        <a href="#" class="post-link" onclick="event.stopPropagation();">Visualizar post →</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // === CLIENT FEED (C1) ===
+        function renderClientFeed() {
+            const feed = document.getElementById('clientFeedContent');
+            const filtered = mockPosts.filter(p => isDateInWeek(p.scheduled_date, currentWeek));
+            const pending = filtered.filter(p => p.status === 'pending');
+
+            let html = '';
+            if (pending.length > 0) {
+                html += `<div class="pending-counter">${pending.length} posts aguardando sua aprovação</div>`;
+            }
+
+            if (filtered.length === 0) {
+                html += '<div class="empty-state">Nenhum post essa semana ainda.</div>';
+                feed.innerHTML = html;
+                return;
+            }
+
+            html += filtered.map(post => `
+                <div class="post-card" onclick="goToPostDetail(${post.id})">
+                    <img src="${post.image_url}" class="post-image" alt="">
+                    <div class="post-content">
+                        <div class="post-header">
+                            <div class="client-avatar">CO</div>
+                            <div class="client-name">Carne&Osso</div>
+                        </div>
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-status status-${post.status}">
+                            <div class="status-dot"></div>
+                            <span>${getStatusLabel(post.status)}</span>
+                        </div>
+                        <div class="post-meta">
+                            <span>${post.network}</span>
+                            <span>•</span>
+                            <span>${post.scheduled_date}</span>
+                        </div>
+                        <a href="#" class="post-link" onclick="event.stopPropagation();">Visualizar post →</a>
+                    </div>
+                </div>
+            `).join('');
+
+            feed.innerHTML = html;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                pending: 'Pendente',
+                approved: 'Aprovado',
+                in_review: 'Em revisão',
+                rejected: 'Reprovado',
+                draft: 'Rascunho'
+            };
+            return labels[status] || status;
+        }
+
+        // === AGENCY FORM (A3) ===
+        function goToNewPost() {
+            currentPost = null;
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postCaption').value = '';
+            document.getElementById('postNetwork').value = 'instagram';
+            document.getElementById('postDate').value = getDateForWeek('next', 0);
+            document.getElementById('postNote').value = '';
+            document.getElementById('uploadArea').classList.remove('has-image');
+            document.getElementById('uploadArea').innerHTML = '<div class="upload-text">Toque para fazer upload</div>';
+            document.getElementById('clientCommentBlock').style.display = 'none';
+            document.getElementById('deletePostBtn').style.display = 'none';
+            goToScreen('postFormScreen');
+        }
+
+        function goToEditPost(postId) {
+            currentPost = mockPosts.find(p => p.id === postId);
+            document.getElementById('postTitle').value = currentPost.title;
+            document.getElementById('postCaption').value = currentPost.caption;
+            document.getElementById('postNetwork').value = currentPost.network.toLowerCase();
+            document.getElementById('postDate').value = currentPost.scheduled_date;
+            document.getElementById('postNote').value = currentPost.internal_note || '';
+            document.getElementById('uploadArea').innerHTML = `<img src="${currentPost.image_url}" class="upload-preview">`;
+            document.getElementById('uploadArea').classList.add('has-image');
+
+            if (currentPost.client_comment) {
+                document.getElementById('clientCommentBlock').innerHTML = `
+                    <div class="client-comment-block">
+                        <div class="comment-label">Comentário do cliente:</div>
+                        <div class="comment-text">${currentPost.client_comment}</div>
+                    </div>
+                `;
+                document.getElementById('clientCommentBlock').style.display = 'block';
+            } else {
+                document.getElementById('clientCommentBlock').style.display = 'none';
+            }
+
+            document.getElementById('deletePostBtn').style.display = currentPost.status === 'draft' ? 'block' : 'none';
+            goToScreen('postFormScreen');
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const uploadArea = document.getElementById('uploadArea');
+                    uploadArea.innerHTML = `<img src="${event.target.result}" class="upload-preview">`;
+                    uploadArea.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function savePostDraft() {
+            alert('Rascunho salvo');
+        }
+
+        function deletePost() {
+            if (confirm('Tem certeza que deseja excluir este post?')) {
+                const index = mockPosts.indexOf(currentPost);
+                if (index > -1) mockPosts.splice(index, 1);
+                goBack();
+            }
+        }
+
+        function submitPostForApproval() {
+            if (currentPost) {
+                currentPost.status = 'pending';
+            } else {
+                mockPosts.push({
+                    id: Math.max(...mockPosts.map(p => p.id)) + 1,
+                    title: document.getElementById('postTitle').value,
+                    caption: document.getElementById('postCaption').value,
+                    image_url: document.getElementById('uploadArea').querySelector('img')?.src || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="360" height="202"%3E%3Crect fill="%23999" width="360" height="202"/%3E%3C/svg%3E',
+                    network: document.getElementById('postNetwork').value.charAt(0).toUpperCase() + document.getElementById('postNetwork').value.slice(1),
+                    scheduled_date: document.getElementById('postDate').value,
+                    status: 'pending',
+                    internal_note: document.getElementById('postNote').value,
+                    client_comment: null,
+                    action_date: null,
+                    client_id: 'carne-osso',
+                    rejection_reason: null
+                });
+            }
+            alert('Post enviado para aprovação');
+            renderFeed();
+            goBack();
+        }
+
+        // === CLIENT DETAIL (C2) ===
+        function goToPostDetail(postId) {
+            currentPost = mockPosts.find(p => p.id === postId);
+            renderPostDetail();
+            goToScreen('postDetailScreen');
+
+            if (!shakeHintShown && currentPost.status === 'pending') {
+                setTimeout(() => {
+                    const hint = document.createElement('div');
+                    hint.className = 'swipe-hint';
+                    hint.textContent = '← Deslizar para reprovar | Deslizar para aprovar →';
+                    document.getElementById('detailContent').appendChild(hint);
+                    shakeHintShown = true;
+                }, 500);
+            }
+        }
+
+        function renderPostDetail() {
+            const post = currentPost;
+            let html = `
+                <div class="detail-title">${post.title}</div>
+                <div class="detail-status-badge status-${post.status}">
+                    <div class="status-dot"></div>
+                    <span>${getStatusLabel(post.status)}</span>
+                </div>
+                <img src="${post.image_url}" class="detail-image" id="detailImage" alt="">
+                <div class="detail-caption">${post.caption}</div>
+                <div class="detail-meta">${post.network} • ${post.scheduled_date}</div>
+            `;
+
+            if (post.status === 'in_review' && post.client_comment) {
+                html += `
+                    <div class="adjustment-block">
+                        <div class="adjustment-label">Você pediu ajuste em ${post.action_date.split('T')[0]}:</div>
+                        <div class="adjustment-text">${post.client_comment}</div>
+                    </div>
+                `;
+            }
+
+            if (post.status === 'approved' || post.status === 'rejected') {
+                const actionTime = new Date(post.action_date);
+                html += `
+                    <div class="action-locked">
+                        Ação registrada em ${actionTime.toLocaleDateString('pt-BR')} às ${actionTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                `;
+            } else if (post.status === 'pending') {
+                html += `
+                    <div class="action-buttons">
+                        <button class="btn-icon" onclick="openRejectSheet()">✕ Reprovar</button>
+                        <button class="btn-icon approve" onclick="openApproveSheet()">✓ Aprovar</button>
+                    </div>
+                    <button class="btn-full" onclick="openAdjustSheet()">✎ Pedir ajuste</button>
+                `;
+            }
+
+            document.getElementById('detailContent').innerHTML = html;
+
+            if (post.status === 'pending') {
+                const image = document.getElementById('detailImage');
+                if (image) {
+                    image.addEventListener('touchstart', onSwipeStart, false);
+                    image.addEventListener('touchend', onSwipeEnd, false);
+                }
+            }
+        }
+
+        function onSwipeStart(e) {
+            swipeStartX = e.changedTouches[0].clientX;
+            swipeStartY = e.changedTouches[0].clientY;
+        }
+
+        function onSwipeEnd(e) {
+            const swipeEndX = e.changedTouches[0].clientX;
+            const swipeEndY = e.changedTouches[0].clientY;
+            const diffX = swipeEndX - swipeStartX;
+            const diffY = swipeEndY - swipeStartY;
+
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    openApproveSheet();
+                } else {
+                    openRejectSheet();
+                }
+            }
+        }
+
+        // === BOTTOM SHEETS ===
+        function openApproveSheet() {
+            document.getElementById('bottomSheetOverlay').classList.add('active');
+            document.getElementById('approveSheet').style.display = 'block';
+        }
+
+        function openRejectSheet() {
+            document.getElementById('bottomSheetOverlay').classList.add('active');
+            document.getElementById('rejectSheet').style.display = 'block';
+            document.getElementById('rejectReason').value = '';
+            updateRejectButton();
+        }
+
+        function openAdjustSheet() {
+            document.getElementById('bottomSheetOverlay').classList.add('active');
+            document.getElementById('adjustSheet').style.display = 'block';
+            document.getElementById('adjustText').value = '';
+            updateAdjustButton();
+        }
+
+        function closeBottomSheet() {
+            document.getElementById('bottomSheetOverlay').classList.remove('active');
+            document.getElementById('approveSheet').style.display = 'none';
+            document.getElementById('rejectSheet').style.display = 'none';
+            document.getElementById('adjustSheet').style.display = 'none';
+        }
+
+        function confirmApprove() {
+            currentPost.status = 'approved';
+            currentPost.action_date = new Date().toISOString();
+            closeBottomSheet();
+            renderClientFeed();
+            goBack();
+        }
+
+        function confirmReject() {
+            const reason = document.getElementById('rejectReason').value;
+            currentPost.status = 'rejected';
+            currentPost.action_date = new Date().toISOString();
+            currentPost.rejection_reason = reason;
+            closeBottomSheet();
+            renderClientFeed();
+            goBack();
+        }
+
+        function confirmAdjust() {
+            const comment = document.getElementById('adjustText').value;
+            currentPost.status = 'in_review';
+            currentPost.action_date = new Date().toISOString();
+            currentPost.client_comment = comment;
+            closeBottomSheet();
+            renderClientFeed();
+            goBack();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rejectReason = document.getElementById('rejectReason');
+            const adjustText = document.getElementById('adjustText');
+            if (rejectReason) rejectReason.addEventListener('input', updateRejectButton);
+            if (adjustText) adjustText.addEventListener('input', updateAdjustButton);
+        });
+
+        function updateRejectButton() {
+            const hasText = document.getElementById('rejectReason').value.trim().length > 0;
+            document.getElementById('rejectBtn').disabled = !hasText;
+        }
+
+        function updateAdjustButton() {
+            const hasText = document.getElementById('adjustText').value.trim().length > 0;
+            document.getElementById('adjustBtn').disabled = !hasText;
+        }
+
+        // === HISTORY (C3) ===
+        function goToHistory(e) {
+            e.preventDefault();
+            currentHistoryFilter = 'all';
+            document.querySelectorAll('#historyScreen .tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('#historyScreen .tab[data-status="all"]').classList.add('active');
+            renderHistory();
+            goToScreen('historyScreen');
+        }
+
+        function renderHistory() {
+            const feed = document.getElementById('historyContent');
+            let filtered = mockPosts.filter(p => p.action_date && (p.status === 'approved' || p.status === 'rejected'));
+
+            if (currentHistoryFilter !== 'all') {
+                filtered = filtered.filter(p => p.status === currentHistoryFilter);
+            }
+
+            if (filtered.length === 0) {
+                feed.innerHTML = '<div class="empty-state">Nenhum post finalizado ainda.</div>';
+                return;
+            }
+
+            feed.innerHTML = filtered.map(post => {
+                const actionTime = new Date(post.action_date);
+                let html = `
+                    <div class="post-card" onclick="goToPostDetail(${post.id})">
+                        <img src="${post.image_url}" class="post-image" alt="">
+                        <div class="post-content">
+                            <div class="post-header">
+                                <div class="client-avatar">CO</div>
+                                <div class="client-name">Carne&Osso</div>
+                            </div>
+                            <div class="post-title">${post.title}</div>
+                            <div class="post-status status-${post.status}">
+                                <div class="status-dot"></div>
+                                <span>${getStatusLabel(post.status)}</span>
+                            </div>
+                            <div class="post-meta">
+                                <span>${post.network}</span>
+                                <span>•</span>
+                                <span>${actionTime.toLocaleDateString('pt-BR')} ${actionTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                `;
+
+                if (post.status === 'rejected' && post.rejection_reason) {
+                    html += `<div class="rejection-reason">${post.rejection_reason}</div>`;
+                }
+
+                html += `<a href="#" class="post-link" onclick="event.stopPropagation();">Ver detalhes →</a>
+                        </div>
+                    </div>
+                `;
+                return html;
+            }).join('');
+        }
+
+        function changeHistoryFilter(tab) {
+            document.querySelectorAll('#historyScreen .tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentHistoryFilter = tab.dataset.status;
+            renderHistory();
+        }
+
+        // === TAB NAVIGATION ===
+        function changeWeek(tab) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentWeek = tab.dataset.week;
+            renderFeed();
+        }
+
+        function renderFeed() {
+            if (currentRole === 'agency') {
+                renderAgencyFeed();
+            } else {
+                renderClientFeed();
+            }
+        }
+
+        // === INIT ===
+        window.addEventListener('load', () => {
+            document.getElementById('loginScreen').classList.add('active');
+        });
+    </script>
 </body>
 </html>
